@@ -11,13 +11,18 @@ app.use(cors());
 app.use(express.json());
 
 // Database Connection
-const MONGODB_URI =
-  process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/accadex";
+const connectDB = require("./lib/db");
 
-mongoose
-  .connect(MONGODB_URI)
-  .then(() => console.log("✅ Connected to MongoDB"))
-  .catch((err) => console.error("❌ MongoDB connection error:", err));
+// Connect to DB before processing requests (Middleware for Vercel)
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    console.error("Database connection failed:", error);
+    res.status(500).json({ error: "Database connection failed" });
+  }
+});
 
 // Routes Placeholders
 app.get("/", (req, res) => {
