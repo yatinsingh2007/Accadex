@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
+import { API_BASE_URL } from '@/lib/api';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -37,7 +38,7 @@ export default function SignupPage() {
         setError('');
 
         try {
-            const res = await axios.post('http://localhost:5001/api/auth/register', formData);
+            const res = await axios.post(`${API_BASE_URL}/api/auth/register`, formData);
 
             // Store token and user data
             localStorage.setItem('token', res.data.token);

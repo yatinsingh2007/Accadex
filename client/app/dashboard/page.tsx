@@ -5,6 +5,7 @@ import Link from 'next/link';
 import axios from 'axios';
 import { Home, BarChart2, MessageSquare, LogOut, Loader2, Calendar as CalendarIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { API_BASE_URL } from '@/lib/api';
 
 // Interfaces
 interface User {
@@ -58,11 +59,11 @@ export default function DashboardPage() {
                 setUser(userData);
 
                 // 2. Fetch Matches
-                const matchesRes = await axios.get(`http://localhost:5001/api/matches/${userId}`);
+                const matchesRes = await axios.get(`${API_BASE_URL}/api/matches/${userId}`);
                 setMatches(matchesRes.data);
 
                 // 3. Fetch Insights
-                const insightsRes = await axios.get(`http://localhost:5001/api/insights/${userId}`);
+                const insightsRes = await axios.get(`${API_BASE_URL}/api/insights/${userId}`);
                 setInsights(insightsRes.data);
 
                 setLoading(false);

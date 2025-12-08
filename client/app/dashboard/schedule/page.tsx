@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label"
 import { Loader2, Calendar as CalendarIcon, Clock, Home, BarChart2, MessageSquare, LogOut } from 'lucide-react'
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { cn } from "@/lib/utils"
+import { API_BASE_URL } from '@/lib/api';
 import { format } from "date-fns"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -74,11 +75,11 @@ export default function SchedulePage() {
                 const userId = userData.id || userData._id;
 
                 // Fetch schedules
-                const schedRes = await axios.get(`http://localhost:5001/api/schedule/${userId}`);
+                const schedRes = await axios.get(`${API_BASE_URL}/api/schedule/${userId}`);
                 setSchedules(schedRes.data);
 
                 // Fetch history
-                const matchRes = await axios.get(`http://localhost:5001/api/matches/${userId}`);
+                const matchRes = await axios.get(`${API_BASE_URL}/api/matches/${userId}`);
                 setHistory(matchRes.data);
 
                 setLoading(false);
@@ -96,9 +97,9 @@ export default function SchedulePage() {
         const userData = JSON.parse(storedUser);
         const userId = userData.id || userData._id;
 
-        const schedRes = await axios.get(`http://localhost:5001/api/schedule/${userId}`);
+        const schedRes = await axios.get(`${API_BASE_URL}/api/schedule/${userId}`);
         setSchedules(schedRes.data);
-        const matchRes = await axios.get(`http://localhost:5001/api/matches/${userId}`);
+        const matchRes = await axios.get(`${API_BASE_URL}/api/matches/${userId}`);
         setHistory(matchRes.data);
     };
 
@@ -113,7 +114,7 @@ export default function SchedulePage() {
             const userData = JSON.parse(storedUser);
             const userId = userData.id || userData._id;
 
-            await axios.post('http://localhost:5001/api/schedule', {
+            await axios.post(`${API_BASE_URL}/api/schedule`, {
                 player: userId,
                 date: date,
                 opponent,
@@ -144,7 +145,7 @@ export default function SchedulePage() {
             if (!item) return;
 
             // 1. Create Match Record
-            await axios.post('http://localhost:5001/api/matches', {
+            await axios.post(`${API_BASE_URL}/api/matches`, {
                 player: userId,
                 opponent: item.opponent,
                 date: item.date,
@@ -154,7 +155,7 @@ export default function SchedulePage() {
             });
 
             // 2. Delete Schedule Record
-            await axios.delete(`http://localhost:5001/api/schedule/${completingId}`);
+            await axios.delete(`${API_BASE_URL}/api/schedule/${completingId}`);
 
             // 3. Refresh
             await fetchAllData();

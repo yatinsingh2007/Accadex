@@ -6,6 +6,7 @@ import axios from 'axios';
 import { motion } from 'framer-motion';
 import { Send, Video, ChevronLeft, Bot, User as UserIcon, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { API_BASE_URL } from '@/lib/api';
 
 interface Message {
     id: number;
@@ -41,7 +42,7 @@ export default function ChatPage() {
         setIsLoading(true);
 
         try {
-            const res = await axios.post('http://localhost:5001/api/chat', {
+            const res = await axios.post(`${API_BASE_URL}/api/chat`, {
                 message: userMessage.text
             });
 
@@ -68,7 +69,7 @@ export default function ChatPage() {
 
         setTimeout(async () => {
             try {
-                const res = await axios.post('http://localhost:5001/api/chat', {
+                const res = await axios.post(`${API_BASE_URL}/api/chat`, {
                     videoUrl: "mock_video_url"
                 });
                 const botResponse: Message = {
