@@ -1,0 +1,239 @@
+'use client';
+
+import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
+import axios from 'axios';
+import { Home, BarChart2, MessageSquare, LogOut, Loader2, Calendar as CalendarIcon } from 'lucide-react';
+import { cn } from '@/lib/utils';
+
+// Interfaces
+interface User {
+    id: string;
+    name: string;
+    role: string;
+    academy?: string;
+}
+
+interface Match {
+    _id: string;
+    opponent: string;
+    result: 'Win' | 'Loss' | 'Draw';
+    score: string;
+    date: string;
+}
+
+interface Insight {
+    _id: string;
+    title: string;
+    description: string;
+    type: 'Performance' | 'Health' | 'Strategy';
+    date: string;
+}
+
+export default function DashboardPage() {
+    const [loading, setLoading] = useState(true);
+    const [user, setUser] = useState<User | null>(null);
+    const [matches, setMatches] = useState<Match[]>([]);
+    const [insights, setInsights] = useState<Insight[]>([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const storedUser = localStorage.getItem('user');
+                const token = localStorage.getItem('token');
+
+                if (!storedUser || !token) {
+                    // Redirect to login if no session
+                    // window.location.href = '/login'; 
+                    // Better to use router but we need to import it.
+                    // For now, let's just return to avoid crashing, user sees loading or empty.
+                    return;
+                }
+
+                const userData = JSON.parse(storedUser);
+                // Ensure we get the ID correctly (handle .id or ._id)
+                const userId = userData.id || userData._id;
+                console.log("Fetching data for User ID:", userId);
+
+                setUser(userData);
+
+                // 2. Fetch Matches
+                const matchesRes = await axios.get(`http://localhost:5001/api/matches/${userId}`);
+                setMatches(matchesRes.data);
+
+                // 3. Fetch Insights
+                const insightsRes = await axios.get(`http://localhost:5001/api/insights/${userId}`);
+                setInsights(insightsRes.data);
+
+                setLoading(false);
+            } catch (error) {
+                console.error("Error loading dashboard data:", error);
+                setLoading(false);
+            }
+        };
+
+        fetchData();
+    }, []);
+
+    // Check for auth on mount
+    useEffect(() => {
+        if (!localStorage.getItem('token')) {
+            // we can use window.location because relying on router constant might strict depend on props
+            window.location.href = '/login';
+        }
+    }, []);
+
+    if (loading) {
+        return (
+            <div className="flex h-screen items-center justify-center bg-black text-white">
+                <Loader2 className="w-8 h-8 animate-spin text-emerald-500" />
+            </div>
+        );
+    }
+
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.href = '/login';
+    };
+
+    return (
+        <div className="flex min-h-screen bg-black text-white font-sans">
+            {/* Sidebar */}
+            <aside className="w-64 border-r border-white/10 bg-black/50 hidden md:flex flex-col p-6 fixed h-full glass">
+                <div className="text-2xl font-bold bg-linear-to-r from-emerald-400 to-cyan-500 bg-clip-text text-transparent mb-10">
+                    Accadex
+                </div>
+
+                <nav className="flex-1 space-y-2">
+                    <NavItem href="/dashboard" icon={<Home size={20} />} active={false}>Dashboard</NavItem>
+                    <NavItem href="/dashboard/schedule" icon={<BarChart2 size={20} />}>Matches</NavItem>
+                    <NavItem href="/dashboard/schedule" icon={<CalendarIcon size={20} />}>Schedule</NavItem>
+                    <NavItem href="/chat" icon={<MessageSquare size={20} />}>AI Coach</NavItem>
+                </nav>
+
+                <div className="pt-6 border-t border-white/10">
+                    <div className="flex items-center gap-3 mb-4">
+                        <div className="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-500 font-bold">
+                            {user?.name?.[0]}
+                        </div>
+                        <div>
+                            <p className="text-sm font-medium text-white">{user?.name}</p>
+                            <p className="text-xs text-gray-500 capitalize">{user?.role}</p>
+                        </div>
+                    </div>
+                    <button
+                        onClick={handleLogout}
+                        className="flex items-center gap-2 text-sm text-gray-400 hover:text-red-400 transition-colors w-full"
+                    >
+                        <LogOut size={16} /> Sign Out
+                    </button>
+                </div>
+            </aside>
+
+            {/* Main Content */}
+            <main className="flex-1 md:ml-64 p-8">
+                <header className="flex justify-between items-center mb-8">
+                    <div>
+                        <h1 className="text-3xl font-bold text-white mb-2">Welcome back, {user?.name?.split(' ')[0]} 👋</h1>
+                        <p className="text-gray-400">Here&apos;s your performance overview from {user?.academy || 'your academy'}.</p>
+                    </div>
+                </header>
+
+                {/* Stats Overview */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <StatCard title="Total Matches" value={matches.length} trend="High Activity" trendColor="text-emerald-400" />
+                    <StatCard title="Win Rate" value="33%" trend="Needs Improvement" trendColor="text-orange-400" /> {/* Calculated simply for demo */}
+                    <StatCard title="Avg Points" value="10.5" trend="+2.3 vs last month" trendColor="text-emerald-400" />
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    {/* Recent Matches */}
+                    <div className="lg:col-span-2 space-y-6">
+                        <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                            <BarChart2 className="text-emerald-500" />
+                            Recent Matches
+                        </h2>
+                        <div className="space-y-4">
+                            {matches.map((match) => (
+                                <div key={match._id} className="p-4 rounded-xl glass-card border border-white/5 hover:border-white/10 transition-colors flex justify-between items-center">
+                                    <div className="flex items-center gap-4">
+                                        <div className={cn(
+                                            "w-2 h-12 rounded-full",
+                                            match.result === 'Win' ? "bg-emerald-500" :
+                                                match.result === 'Loss' ? "bg-red-500" : "bg-yellow-500"
+                                        )} />
+                                        <div>
+                                            <h3 className="font-semibold text-lg">{match.opponent}</h3>
+                                            <p className="text-sm text-gray-400">{new Date(match.date).toLocaleDateString()}</p>
+                                        </div>
+                                    </div>
+                                    <div className="text-right">
+                                        <p className="text-xl font-bold font-mono">{match.score}</p>
+                                        <p className={cn(
+                                            "text-xs font-bold uppercase",
+                                            match.result === 'Win' ? "text-emerald-500" :
+                                                match.result === 'Loss' ? "text-red-500" : "text-yellow-500"
+                                        )}>{match.result}</p>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* AI Insights */}
+                    <div className="space-y-6">
+                        <h2 className="text-xl font-bold text-white flex items-center gap-2">
+                            <MessageSquare className="text-cyan-500" />
+                            AI Insights
+                        </h2>
+                        <div className="space-y-4">
+                            {insights.map((insight) => (
+                                <div key={insight._id} className="p-4 rounded-xl bg-linear-to-br from-white/5 to-white/2 border border-white/5">
+                                    <div className="flex justify-between items-start mb-2">
+                                        <span className={cn(
+                                            "px-2 py-1 rounded-md text-xs font-medium",
+                                            insight.type === 'Performance' ? "bg-purple-500/20 text-purple-300" : "bg-blue-500/20 text-blue-300"
+                                        )}>{insight.type}</span>
+                                        <span className="text-xs text-gray-500">{new Date(insight.date).toLocaleDateString()}</span>
+                                    </div>
+                                    <h4 className="font-semibold text-white mb-1">{insight.title}</h4>
+                                    <p className="text-sm text-gray-400">{insight.description}</p>
+                                </div>
+                            ))}
+
+                            <Link href="/chat" className="block w-full text-center py-3 rounded-lg border border-dashed border-white/20 text-gray-400 hover:text-white hover:border-white/40 transition-colors text-sm">
+                                Ask AI for more analysis +
+                            </Link>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    );
+}
+
+function NavItem({ href, icon, children, active }: { href: string, icon: React.ReactNode, children: React.ReactNode, active?: boolean }) {
+    return (
+        <Link
+            href={href}
+            className={cn(
+                "flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors",
+                active ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" : "text-gray-400 hover:bg-white/5 hover:text-white"
+            )}
+        >
+            {icon}
+            {children}
+        </Link>
+    );
+}
+
+function StatCard({ title, value, trend, trendColor }: { title: string, value: string | number, trend: string, trendColor: string }) {
+    return (
+        <div className="p-6 rounded-xl glass-card">
+            <p className="text-gray-400 text-sm mb-1">{title}</p>
+            <h3 className="text-3xl font-bold text-white mb-2">{value}</h3>
+            <p className={cn("text-xs font-medium", trendColor)}>{trend}</p>
+        </div>
+    );
+}
