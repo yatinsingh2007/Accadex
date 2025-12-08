@@ -38,6 +38,10 @@ app.use("/api/insights", insightRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/schedule", scheduleRoutes);
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
+
+module.exports = app;
