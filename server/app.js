@@ -1,5 +1,4 @@
 const express = require("express");
-const mongoose = require("mongoose");
 const cors = require("cors");
 require("dotenv").config();
 
@@ -14,15 +13,6 @@ app.use(express.json());
 const connectDB = require("./lib/db");
 
 // Connect to DB before processing requests (Middleware for Vercel)
-app.use(async (req, res, next) => {
-  try {
-    await connectDB();
-    next();
-  } catch (error) {
-    console.error("Database connection failed:", error);
-    res.status(500).json({ error: "Database connection failed" });
-  }
-});
 
 // Routes Placeholders
 app.get("/", (req, res) => {
@@ -46,6 +36,7 @@ app.use("/api/schedule", scheduleRoutes);
 if (require.main === module) {
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
+    connectDB();
   });
 }
 
