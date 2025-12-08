@@ -10,7 +10,13 @@ app.use(express.json());
 
 
 const connectDB = require("./lib/db");
-connectDB();
+connectDB()
+.then(() => {
+  console.log("✅ New MongoDB connection established");
+})
+.catch((error) => {
+  console.error("❌ MongoDB connection error:", error);
+});
 
 
 app.get("/", (req, res) => {
