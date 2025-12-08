@@ -16,7 +16,7 @@ interface Message {
 }
 
 export default function ChatPage() {
-    // Explicitly cast initial state to compatible type or use generic type properly
+    // Pure AI Coach logic
     const [messages, setMessages] = useState<Message[]>([
         { id: 1, sender: 'bot', text: "Hello! I'm your AI Coach. Upload a match clip or ask me about your recent performance." }
     ]);
@@ -43,7 +43,8 @@ export default function ChatPage() {
 
         try {
             const res = await axios.post(`${API_BASE_URL}/api/chat`, {
-                message: userMessage.text
+                message: userMessage.text,
+                role: 'ai_coach'
             });
 
             const botResponse: Message = {
@@ -70,7 +71,8 @@ export default function ChatPage() {
         setTimeout(async () => {
             try {
                 const res = await axios.post(`${API_BASE_URL}/api/chat`, {
-                    videoUrl: "mock_video_url"
+                    videoUrl: "mock_video_url",
+                    role: 'ai_coach'
                 });
                 const botResponse: Message = {
                     id: Date.now() + 1,
@@ -116,7 +118,7 @@ export default function ChatPage() {
                         animate={{ opacity: 1, y: 0 }}
                         key={msg.id}
                         className={cn(
-                            "flex gap-3 max-w-[80%]",
+                            "flex gap-3 max-w-[85%] md:max-w-[70%]",
                             msg.sender === 'user' ? "ml-auto flex-row-reverse" : ""
                         )}
                     >

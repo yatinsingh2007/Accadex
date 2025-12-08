@@ -283,7 +283,7 @@ export default function SchedulePage() {
                                 ) : (
                                     schedules.map((schedule) => (
                                         <div key={schedule._id} className="group p-5 rounded-xl border border-white/5 bg-white/5 flex flex-col sm:flex-row justify-between items-center hover:bg-white/10 transition-all gap-4">
-                                            <div className="flex items-center gap-4 w-full">
+                                            <div className="flex items-center gap-4">
                                                 <div className="w-12 h-12 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-500 font-bold shrink-0">
                                                     {schedule.opponent[0]}
                                                 </div>
@@ -294,48 +294,48 @@ export default function SchedulePage() {
                                                         <span className="px-2 py-0.5 rounded-full bg-white/10 text-xs">{schedule.type}</span>
                                                     </div>
                                                 </div >
-                                                <Dialog>
-                                                    <DialogTrigger asChild>
-                                                        <Button
-                                                            variant="outline"
-                                                            className="border-emerald-500/50 text-emerald-400 hover:bg-emerald-500/10 hover:text-emerald-300 w-full sm:w-auto"
-                                                            onClick={() => setCompletingId(schedule._id)}
-                                                        >
-                                                            Mark Complete
-                                                        </Button>
-                                                    </DialogTrigger>
-                                                    <DialogContent className="bg-zinc-900 border-zinc-800 text-white">
-                                                        <DialogHeader>
-                                                            <DialogTitle>Match Result</DialogTitle>
-                                                            <DialogDescription>Enter the final score for vs {schedule.opponent}</DialogDescription>
-                                                        </DialogHeader>
-                                                        <div className="space-y-4 py-4">
-                                                            <div className="space-y-2">
-                                                                <Label>Score (You - Opponent)</Label>
-                                                                <Input placeholder="e.g. 2-1" value={resultScore} onChange={(e) => setResultScore(e.target.value)} className="bg-black/50 border-zinc-700" />
-                                                            </div>
-                                                            <div className="space-y-2">
-                                                                <Label>Outcome</Label>
-                                                                <Select onValueChange={setResultOutcome} defaultValue="Win">
-                                                                    <SelectTrigger className="bg-black/50 border-zinc-700">
-                                                                        <SelectValue />
-                                                                    </SelectTrigger>
-                                                                    <SelectContent className="bg-zinc-900 border-zinc-800 text-white">
-                                                                        <SelectItem value="Win">Win</SelectItem>
-                                                                        <SelectItem value="Loss">Loss</SelectItem>
-                                                                        <SelectItem value="Draw">Draw</SelectItem>
-                                                                    </SelectContent>
-                                                                </Select>
-                                                            </div>
-                                                        </div>
-                                                        <DialogFooter>
-                                                            <Button onClick={handleCompleteMatch} disabled={submitting} className="bg-emerald-600 hover:bg-emerald-700 text-white">
-                                                                {submitting ? <Loader2 className="animate-spin mr-2" /> : "Save Result"}
-                                                            </Button>
-                                                        </DialogFooter>
-                                                    </DialogContent>
-                                                </Dialog>
                                             </div>
+                                            <Dialog>
+                                                <DialogTrigger asChild>
+                                                    <Button
+                                                        variant="outline"
+                                                        className="border-emerald-500/50 text-emerald-400 hover:bg-emerald-500/10 hover:text-emerald-300 w-full sm:w-auto"
+                                                        onClick={() => setCompletingId(schedule._id)}
+                                                    >
+                                                        Mark Complete
+                                                    </Button>
+                                                </DialogTrigger>
+                                                <DialogContent className="bg-zinc-900 border-zinc-800 text-white">
+                                                    <DialogHeader>
+                                                        <DialogTitle>Match Result</DialogTitle>
+                                                        <DialogDescription>Enter the final score for vs {schedule.opponent}</DialogDescription>
+                                                    </DialogHeader>
+                                                    <div className="space-y-4 py-4">
+                                                        <div className="space-y-2">
+                                                            <Label>Score (You - Opponent)</Label>
+                                                            <Input placeholder="e.g. 2-1" value={resultScore} onChange={(e) => setResultScore(e.target.value)} className="bg-black/50 border-zinc-700" />
+                                                        </div>
+                                                        <div className="space-y-2">
+                                                            <Label>Outcome</Label>
+                                                            <Select onValueChange={setResultOutcome} defaultValue="Win">
+                                                                <SelectTrigger className="bg-black/50 border-zinc-700">
+                                                                    <SelectValue />
+                                                                </SelectTrigger>
+                                                                <SelectContent className="bg-zinc-900 border-zinc-800 text-white">
+                                                                    <SelectItem value="Win">Win</SelectItem>
+                                                                    <SelectItem value="Loss">Loss</SelectItem>
+                                                                    <SelectItem value="Draw">Draw</SelectItem>
+                                                                </SelectContent>
+                                                            </Select>
+                                                        </div>
+                                                    </div>
+                                                    <DialogFooter>
+                                                        <Button onClick={handleCompleteMatch} disabled={submitting} className="bg-emerald-600 hover:bg-emerald-700 text-white">
+                                                            {submitting ? <Loader2 className="animate-spin mr-2" /> : "Save Result"}
+                                                        </Button>
+                                                    </DialogFooter>
+                                                </DialogContent>
+                                            </Dialog>
                                         </div>
                                     ))
                                 )}

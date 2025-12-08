@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import axios from 'axios';
-import { Home, BarChart2, MessageSquare, LogOut, Loader2, Calendar as CalendarIcon } from 'lucide-react';
+import { Home, BarChart2, MessageSquare, LogOut, Loader2, Calendar as CalendarIcon, Users, Menu, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { API_BASE_URL } from '@/lib/api';
 
@@ -36,6 +36,7 @@ export default function DashboardPage() {
     const [user, setUser] = useState<User | null>(null);
     const [matches, setMatches] = useState<Match[]>([]);
     const [insights, setInsights] = useState<Insight[]>([]);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -92,6 +93,8 @@ export default function DashboardPage() {
         );
     }
 
+
+
     const handleLogout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
@@ -100,10 +103,38 @@ export default function DashboardPage() {
 
     return (
         <div className="flex min-h-screen bg-black text-white font-sans">
-            {/* Sidebar */}
-            <aside className="w-64 border-r border-white/10 bg-black/50 hidden md:flex flex-col p-6 fixed h-full glass">
-                <div className="text-2xl font-bold bg-linear-to-r from-emerald-400 to-cyan-500 bg-clip-text text-transparent mb-10">
+            {/* Mobile Header with Menu Button */}
+            <div className="md:hidden flex items-center p-4 border-b border-white/10 absolute top-0 left-0 w-full z-20 bg-black/50 glass">
+                <button onClick={() => setIsSidebarOpen(!isSidebarOpen)} className="p-2 -ml-2 text-white">
+                    <Menu size={24} />
+                </button>
+                <div className="ml-4 font-bold text-lg bg-linear-to-r from-emerald-400 to-cyan-500 bg-clip-text text-transparent">
                     Accadex
+                </div>
+            </div>
+
+            {/* Sidebar Overlay */}
+            {isSidebarOpen && (
+                <div
+                    className="fixed inset-0 bg-black/80 z-30 md:hidden"
+                    onClick={() => setIsSidebarOpen(false)}
+                />
+            )}
+
+            {/* Sidebar */}
+            <aside className={cn(
+                "fixed inset-y-0 left-0 z-40 w-64 border-r border-white/10 bg-black/90 md:bg-black/50 p-6 transition-transform duration-300 md:translate-x-0 md:static md:flex md:flex-col glass",
+                isSidebarOpen ? "translate-x-0" : "-translate-x-full"
+            )}>
+                <div className="text-2xl font-bold bg-linear-to-r from-emerald-400 to-cyan-500 bg-clip-text text-transparent mb-10 hidden md:block">
+                    Accadex
+                </div>
+
+                {/* Mobile Close Button */}
+                <div className="md:hidden flex justify-end mb-4">
+                    <button onClick={() => setIsSidebarOpen(false)} className="p-2 text-gray-400">
+                        <X size={24} />
+                    </button>
                 </div>
 
                 <nav className="flex-1 space-y-2">
@@ -111,6 +142,7 @@ export default function DashboardPage() {
                     <NavItem href="/dashboard/schedule" icon={<BarChart2 size={20} />}>Matches</NavItem>
                     <NavItem href="/dashboard/schedule" icon={<CalendarIcon size={20} />}>Schedule</NavItem>
                     <NavItem href="/chat" icon={<MessageSquare size={20} />}>AI Coach</NavItem>
+                    <NavItem href="/community" icon={<Users size={20} />}>Community</NavItem>
                 </nav>
 
                 <div className="pt-6 border-t border-white/10">
@@ -133,8 +165,8 @@ export default function DashboardPage() {
             </aside>
 
             {/* Main Content */}
-            <main className="flex-1 md:ml-64 p-8">
-                <header className="flex justify-between items-center mb-8">
+            <main className="flex-1 p-8 pt-20 md:pt-8 w-full">
+                <header className="flex flex-col md:flex-row md:justify-between md:items-center mb-8 gap-4">
                     <div>
                         <h1 className="text-3xl font-bold text-white mb-2">Welcome back, {user?.name?.split(' ')[0]} 👋</h1>
                         <p className="text-gray-400">Here&apos;s your performance overview from {user?.academy || 'your academy'}.</p>

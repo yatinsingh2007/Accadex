@@ -1,13 +1,15 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { ArrowRight, Activity, Users, MessageSquare } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { ArrowRight, Activity, Users, MessageSquare, Menu, X } from 'lucide-react';
 import { BackgroundBeams } from '@/components/ui/background-beams';
 // cn was unused
 
 export default function LandingPage() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-black text-white selection:bg-emerald-500/30">
       {/* Navigation */}
@@ -16,7 +18,9 @@ export default function LandingPage() {
           <div className="text-2xl font-bold bg-linear-to-r from-emerald-400 to-cyan-500 bg-clip-text text-transparent">
             Accadex
           </div>
-          <div className="flex items-center gap-6">
+
+          {/* Desktop Nav */}
+          <div className="hidden md:flex items-center gap-6">
             <Link href="/login" className="text-sm text-gray-400 hover:text-white transition-colors">
               Login
             </Link>
@@ -33,7 +37,39 @@ export default function LandingPage() {
               Get Started
             </Link>
           </div>
+
+          {/* Mobile Menu Toggle */}
+          <button
+            className="md:hidden p-2 text-gray-400 hover:text-white"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            {isMobileMenuOpen ? <X /> : <Menu />}
+          </button>
         </div>
+
+        {/* Mobile Nav Overlay */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="md:hidden border-t border-white/10 bg-black/95 glass overflow-hidden"
+            >
+              <div className="flex flex-col p-6 space-y-4">
+                <Link href="/login" className="text-lg text-gray-400 hover:text-white transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
+                  Login
+                </Link>
+                <Link href="/signup" className="text-lg text-emerald-400 font-medium" onClick={() => setIsMobileMenuOpen(false)}>
+                  Sign Up
+                </Link>
+                <Link href="/dashboard" className="text-lg text-white font-semibold" onClick={() => setIsMobileMenuOpen(false)}>
+                  Get Started
+                </Link>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
 
       {/* Hero Section */}
