@@ -139,7 +139,6 @@ export default function DashboardPage() {
 
                 <nav className="flex-1 space-y-2 overflow-y-auto no-scrollbar">
                     <NavItem href="/dashboard" icon={<Home size={20} />} active={false}>Dashboard</NavItem>
-                    <NavItem href="/dashboard/schedule" icon={<BarChart2 size={20} />}>Matches</NavItem>
                     <NavItem href="/dashboard/schedule" icon={<CalendarIcon size={20} />}>Schedule</NavItem>
                     <NavItem href="/chat" icon={<MessageSquare size={20} />}>AI Coach</NavItem>
                     <NavItem href="/community" icon={<Users size={20} />}>Community</NavItem>
@@ -188,29 +187,40 @@ export default function DashboardPage() {
                             Recent Matches
                         </h2>
                         <div className="space-y-4">
-                            {matches.map((match) => (
-                                <div key={match._id} className="p-4 rounded-xl glass-card border border-white/5 hover:border-white/10 transition-colors flex justify-between items-center">
-                                    <div className="flex items-center gap-4">
-                                        <div className={cn(
-                                            "w-2 h-12 rounded-full",
-                                            match.result === 'Win' ? "bg-emerald-500" :
-                                                match.result === 'Loss' ? "bg-red-500" : "bg-yellow-500"
-                                        )} />
-                                        <div>
-                                            <h3 className="font-semibold text-lg">{match.opponent}</h3>
-                                            <p className="text-sm text-gray-400">{new Date(match.date).toLocaleDateString()}</p>
+                            {matches.length === 0 ? (
+                                <div className="p-8 rounded-xl glass-card border border-white/5 flex flex-col items-center justify-center text-center">
+                                    <BarChart2 className="w-12 h-12 text-gray-600 mb-4" />
+                                    <h3 className="text-xl font-bold text-gray-300">No Matches Yet</h3>
+                                    <p className="text-gray-500 mt-2 mb-4">Start playing and logging your matches to track your progress.</p>
+                                    <Link href="/dashboard/schedule" className="px-4 py-2 bg-emerald-500 text-black font-bold rounded-lg hover:bg-emerald-400 transition-colors">
+                                        Log a Match
+                                    </Link>
+                                </div>
+                            ) : (
+                                matches.map((match) => (
+                                    <div key={match._id} className="p-4 rounded-xl glass-card border border-white/5 hover:border-white/10 transition-colors flex justify-between items-center">
+                                        <div className="flex items-center gap-4">
+                                            <div className={cn(
+                                                "w-2 h-12 rounded-full",
+                                                match.result === 'Win' ? "bg-emerald-500" :
+                                                    match.result === 'Loss' ? "bg-red-500" : "bg-yellow-500"
+                                            )} />
+                                            <div>
+                                                <h3 className="font-semibold text-lg">{match.opponent}</h3>
+                                                <p className="text-sm text-gray-400">{new Date(match.date).toLocaleDateString()}</p>
+                                            </div>
+                                        </div>
+                                        <div className="text-right">
+                                            <p className="text-xl font-bold font-mono">{match.score} <span className="text-xs text-gray-400">Runs</span></p>
+                                            <p className={cn(
+                                                "text-xs font-bold uppercase",
+                                                match.result === 'Win' ? "text-emerald-500" :
+                                                    match.result === 'Loss' ? "text-red-500" : "text-yellow-500"
+                                            )}>{match.result}</p>
                                         </div>
                                     </div>
-                                    <div className="text-right">
-                                        <p className="text-xl font-bold font-mono">{match.score} <span className="text-xs text-gray-400">Runs</span></p>
-                                        <p className={cn(
-                                            "text-xs font-bold uppercase",
-                                            match.result === 'Win' ? "text-emerald-500" :
-                                                match.result === 'Loss' ? "text-red-500" : "text-yellow-500"
-                                        )}>{match.result}</p>
-                                    </div>
-                                </div>
-                            ))}
+                                ))
+                            )}
                         </div>
                     </div>
 
@@ -221,19 +231,27 @@ export default function DashboardPage() {
                             AI Insights
                         </h2>
                         <div className="space-y-4">
-                            {insights.map((insight) => (
-                                <div key={insight._id} className="p-4 rounded-xl bg-linear-to-br from-white/5 to-white/2 border border-white/5">
-                                    <div className="flex justify-between items-start mb-2">
-                                        <span className={cn(
-                                            "px-2 py-1 rounded-md text-xs font-medium",
-                                            insight.type === 'Performance' ? "bg-purple-500/20 text-purple-300" : "bg-blue-500/20 text-blue-300"
-                                        )}>{insight.type}</span>
-                                        <span className="text-xs text-gray-500">{new Date(insight.date).toLocaleDateString()}</span>
-                                    </div>
-                                    <h4 className="font-semibold text-white mb-1">{insight.title}</h4>
-                                    <p className="text-sm text-gray-400">{insight.description}</p>
+                            {insights.length === 0 ? (
+                                <div className="p-6 rounded-xl bg-white/5 border border-white/5 text-center">
+                                    <MessageSquare className="w-8 h-8 text-gray-600 mx-auto mb-2" />
+                                    <p className="text-gray-400 text-sm">No insights available yet.</p>
+                                    <p className="text-xs text-gray-600 mt-1">Play matches to unlock AI analysis.</p>
                                 </div>
-                            ))}
+                            ) : (
+                                insights.map((insight) => (
+                                    <div key={insight._id} className="p-4 rounded-xl bg-linear-to-br from-white/5 to-white/2 border border-white/5">
+                                        <div className="flex justify-between items-start mb-2">
+                                            <span className={cn(
+                                                "px-2 py-1 rounded-md text-xs font-medium",
+                                                insight.type === 'Performance' ? "bg-purple-500/20 text-purple-300" : "bg-blue-500/20 text-blue-300"
+                                            )}>{insight.type}</span>
+                                            <span className="text-xs text-gray-500">{new Date(insight.date).toLocaleDateString()}</span>
+                                        </div>
+                                        <h4 className="font-semibold text-white mb-1">{insight.title}</h4>
+                                        <p className="text-sm text-gray-400">{insight.description}</p>
+                                    </div>
+                                ))
+                            )}
 
                             <Link href="/chat" className="block w-full text-center py-3 rounded-lg border border-dashed border-white/20 text-gray-400 hover:text-white hover:border-white/40 transition-colors text-sm">
                                 Ask AI for more analysis +

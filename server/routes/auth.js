@@ -25,58 +25,8 @@ router.post("/register", async (req, res) => {
 
     await user.save();
 
-    // Auto-generate Welcome Matches for Pitch
-    const Match = require("../models/Match");
-    const Insight = require("../models/Insight");
-
-    const welcomeMatches = [
-      {
-        opponent: "Placement Match AI",
-        result: "Win",
-        score: "185/4 - 150/9",
-        player: user.id,
-        stats: { points: 65, assists: 0, minutesPlayed: 20 }, // Converted to Runs
-        date: new Date(),
-      },
-      {
-        opponent: "Training Squad",
-        result: "Draw",
-        score: "220/8 - 220/10",
-        player: user.id,
-        stats: { points: 45, assists: 2, minutesPlayed: 20 }, // Runs, Wickets
-        date: new Date(Date.now() - 86400000 * 3),
-      },
-      {
-        opponent: "Academy Reserves",
-        result: "Loss",
-        score: "135/10 - 138/2",
-        player: user.id,
-        stats: { points: 12, assists: 1, minutesPlayed: 15 },
-        date: new Date(Date.now() - 86400000 * 7),
-      },
-    ];
-    await Match.insertMany(welcomeMatches);
-
-    // Auto-generate Welcome Insights
-    const welcomeInsights = [
-      {
-        title: "Welcome to Accadex",
-        description:
-          "This is your AI-powered performance feed. Upload match clips to get personalized coaching.",
-        type: "Strategy",
-        relatedPlayer: user.id,
-        date: new Date(),
-      },
-      {
-        title: "Initial Assessment",
-        description:
-          "Based on your initial nets session, we recommend focusing on your front-foot defense.",
-        type: "Performance",
-        relatedPlayer: user.id,
-        date: new Date(),
-      },
-    ];
-    await Insight.insertMany(welcomeInsights);
+    // Auto-generation of demo data removed as per user request
+    // Matches and Insights start empty for new users
 
     const payload = { user: { id: user._id, role: user.role } };
     jwt.sign(

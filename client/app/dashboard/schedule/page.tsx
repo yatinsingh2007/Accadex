@@ -185,8 +185,7 @@ export default function SchedulePage() {
 
                 <nav className="flex-1 space-y-2">
                     <NavItem href="/dashboard" icon={<Home size={20} />} active={false}>Dashboard</NavItem>
-                    <NavItem href="/dashboard/schedule" icon={<BarChart2 size={20} />} active={true}>Matches</NavItem>
-                    <NavItem href="/dashboard/schedule" icon={<CalendarIcon size={20} />}>Schedule</NavItem>
+                    <NavItem href="/dashboard/schedule" icon={<CalendarIcon size={20} />} active={true}>Schedule</NavItem>
                     <NavItem href="/chat" icon={<MessageSquare size={20} />}>AI Coach</NavItem>
                 </nav>
 
