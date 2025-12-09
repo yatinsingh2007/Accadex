@@ -23,6 +23,10 @@ const UserSchema = new mongoose.Schema({
     enum: ["player", "coach", "admin"],
     default: "player",
   },
+  sport: {
+    type: String,
+    default: "Football",
+  },
   createdAt: {
     type: Date,
     default: Date.now,

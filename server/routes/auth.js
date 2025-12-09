@@ -7,7 +7,7 @@ const User = require("../models/User");
 // Register
 router.post("/register", async (req, res) => {
   try {
-    const { name, email, password, role, academy } = req.body;
+    const { name, email, password, role, academy, sport } = req.body;
     let user = await User.findOne({ email });
     if (user) return res.status(400).json({ msg: "User already exists" });
 
@@ -20,6 +20,7 @@ router.post("/register", async (req, res) => {
       password: hashedPassword,
       role,
       academy,
+      sport: sport || "Football",
     });
 
     await user.save();
@@ -32,25 +33,25 @@ router.post("/register", async (req, res) => {
       {
         opponent: "Placement Match AI",
         result: "Win",
-        score: "2-0",
+        score: "185/4 - 150/9",
         player: user.id,
-        stats: { points: 10, assists: 2, minutesPlayed: 45 },
+        stats: { points: 65, assists: 0, minutesPlayed: 20 }, // Converted to Runs
         date: new Date(),
       },
       {
         opponent: "Training Squad",
         result: "Draw",
-        score: "1-1",
+        score: "220/8 - 220/10",
         player: user.id,
-        stats: { points: 5, assists: 1, minutesPlayed: 60 },
+        stats: { points: 45, assists: 2, minutesPlayed: 20 }, // Runs, Wickets
         date: new Date(Date.now() - 86400000 * 3),
       },
       {
         opponent: "Academy Reserves",
         result: "Loss",
-        score: "0-2",
+        score: "135/10 - 138/2",
         player: user.id,
-        stats: { points: 2, assists: 0, minutesPlayed: 30 },
+        stats: { points: 12, assists: 1, minutesPlayed: 15 },
         date: new Date(Date.now() - 86400000 * 7),
       },
     ];
@@ -69,7 +70,7 @@ router.post("/register", async (req, res) => {
       {
         title: "Initial Assessment",
         description:
-          "Based on your initial stats, we recommend focusing on endurance training.",
+          "Based on your initial nets session, we recommend focusing on your front-foot defense.",
         type: "Performance",
         relatedPlayer: user.id,
         date: new Date(),

@@ -19,7 +19,8 @@ export default function SignupPage() {
         email: '',
         password: '',
         role: 'player',
-        academy: ''
+        academy: '',
+        sport: 'Football'
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
@@ -30,6 +31,10 @@ export default function SignupPage() {
 
     const handleSelectChange = (value: string) => {
         setFormData({ ...formData, role: value });
+    };
+
+    const handleSportChange = (value: string) => {
+        setFormData({ ...formData, sport: value });
     };
 
     const handleSignup = async (e: React.FormEvent) => {
@@ -98,6 +103,23 @@ export default function SignupPage() {
                                 <SelectContent className="bg-zinc-900 border-zinc-800 text-white">
                                     <SelectItem value="player">Player</SelectItem>
                                     <SelectItem value="coach">Coach</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="sport">Sport</Label>
+                            <Select onValueChange={handleSportChange} defaultValue="Football">
+                                <SelectTrigger className="bg-black/50 border-zinc-700">
+                                    <SelectValue placeholder="Select your sport" />
+                                </SelectTrigger>
+                                <SelectContent className="bg-zinc-900 border-zinc-800 text-white">
+                                    <SelectItem value="Football">Football</SelectItem>
+                                    <SelectItem value="Basketball">Basketball</SelectItem>
+                                    <SelectItem value="Cricket">Cricket</SelectItem>
+                                    <SelectItem value="Tennis">Tennis</SelectItem>
+                                    <SelectItem value="Badminton">Badminton</SelectItem>
+                                    <SelectItem value="Hockey">Hockey</SelectItem>
+                                    <SelectItem value="Athletics">Athletics</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>

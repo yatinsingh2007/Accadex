@@ -177,7 +177,7 @@ export default function DashboardPage() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                     <StatCard title="Total Matches" value={matches.length} trend="High Activity" trendColor="text-emerald-400" />
                     <StatCard title="Win Rate" value="33%" trend="Needs Improvement" trendColor="text-orange-400" /> {/* Calculated simply for demo */}
-                    <StatCard title="Avg Points" value="10.5" trend="+2.3 vs last month" trendColor="text-emerald-400" />
+                    <StatCard title="Batting Avg" value="45.5" trend="+5.2 vs last season" trendColor="text-emerald-400" />
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -202,7 +202,7 @@ export default function DashboardPage() {
                                         </div>
                                     </div>
                                     <div className="text-right">
-                                        <p className="text-xl font-bold font-mono">{match.score}</p>
+                                        <p className="text-xl font-bold font-mono">{match.score} <span className="text-xs text-gray-400">Runs</span></p>
                                         <p className={cn(
                                             "text-xs font-bold uppercase",
                                             match.result === 'Win' ? "text-emerald-500" :
