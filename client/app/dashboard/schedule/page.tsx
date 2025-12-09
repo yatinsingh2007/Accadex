@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Loader2, Calendar as CalendarIcon, Clock, Home, BarChart2, MessageSquare, LogOut } from 'lucide-react'
+import { Loader2, Calendar as CalendarIcon, Clock, Home, BarChart2, MessageSquare, LogOut, Users } from 'lucide-react'
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { cn } from "@/lib/utils"
 import { API_BASE_URL } from '@/lib/api';
@@ -187,6 +187,7 @@ export default function SchedulePage() {
                     <NavItem href="/dashboard" icon={<Home size={20} />} active={false}>Dashboard</NavItem>
                     <NavItem href="/dashboard/schedule" icon={<CalendarIcon size={20} />} active={true}>Schedule</NavItem>
                     <NavItem href="/chat" icon={<MessageSquare size={20} />}>AI Coach</NavItem>
+                    <NavItem href="/community" icon={<Users size={20} />}>Community</NavItem>
                 </nav>
 
                 <div className="pt-6 border-t border-white/10">
