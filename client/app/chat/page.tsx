@@ -5,6 +5,8 @@ import Link from 'next/link';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import { Send, Video, ChevronLeft, Bot, User as UserIcon, Loader2 } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import { cn } from '@/lib/utils';
 import { API_BASE_URL } from '@/lib/api';
 
@@ -141,7 +143,11 @@ export default function ChatPage() {
                                     Video Uploaded
                                 </div>
                             ) : (
-                                <p className="leading-relaxed">{msg.text}</p>
+                                <div className="leading-relaxed prose prose-invert prose-sm max-w-none">
+                                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                        {msg.text}
+                                    </ReactMarkdown>
+                                </div>
                             )}
                         </div>
                     </motion.div>
