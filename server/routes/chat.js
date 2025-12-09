@@ -1,68 +1,87 @@
 const express = require("express");
+
 const router = express.Router();
-
-const { GoogleGenerativeAI } = require("@google/generative-ai");
-
-// Initialize Gemini
-// Ensure you have GEMINI_API_KEY in your .env file
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 router.post("/", async (req, res) => {
   try {
     const { message, videoUrl, role = "ai_coach" } = req.body;
 
-    // Check for API Key
-    if (!process.env.GEMINI_API_KEY) {
-      console.warn("GEMINI_API_KEY not found. Using partial mock response.");
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      console.warn("GEMINI_API_KEY missing");
       return res.json({
         response:
-          "I'm currently running in demo mode because my AI brain (API Key) is missing. Please add GEMINI_API_KEY to the server .env file to unlock my full potential!",
+          "AI is running in demo mode. Please configure GEMINI_API_KEY.",
       });
     }
-
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
     let systemInstruction = "";
 
     switch (role) {
       case "physician":
         systemInstruction =
-          "You are Dr. Sarah, a sports physician. Provide advice on injury prevention, recovery, and physical health for athletes. Keep it professional but accessible.";
+          "You are Dr. Sarah, a sports physician. Provide injury prevention and recovery advice.";
         break;
       case "head_coach":
         systemInstruction =
-          "You are Coach Mike, a tough but encouraging head coach. Focus on strategy, discipline, teamwork, and match performance. Use coaching terminology.";
+          "You are Coach Mike, a strict but motivating head coach. Focus on tactics and discipline.";
         break;
       case "nutritionist":
         systemInstruction =
-          "You are Lisa, a sports nutritionist. Advise on diet, hydration, meal planning, and fueling for performance. Be specific about food types.";
+          "You are Lisa, a sports nutritionist. Give diet and hydration advice.";
         break;
       case "ai_coach":
       default:
         systemInstruction =
-          "You are an advanced AI Sports Coach. Analyze user inputs regarding sports performance, technique, and strategy. Provide data-driven and tactical advice.";
+          "You are an advanced AI Sports Coach. Provide technical and performance feedback.";
         break;
     }
 
-    // specific prompt construction
     let prompt = `${systemInstruction}\n\nUser: ${message}`;
+
     if (videoUrl) {
-      prompt += `\n[System Note: User uploaded a video at ${videoUrl}. Since I cannot see videos yet, acknowledge the upload and give general advice based on the context provided in the message.]`;
+      prompt += `\n\n[System Note: The user uploaded a video at ${videoUrl}. You cannot directly view it, so acknowledge and give general guidance based on the message.]`;
     }
 
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
-    const text = response.text();
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          contents: [
+            {
+              parts: [{ text: prompt }],
+            },
+          ],
+        }),
+      }
+    );
 
-    res.json({ response: text });
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(
+        `Gemini API Error: ${response.status} ${response.statusText} - ${errorText}`
+      );
+    }
+
+    const data = await response.json();
+
+    // Extract text from the response structure
+    const text =
+      data.candidates?.[0]?.content?.parts?.[0]?.text ||
+      "No response generated.";
+
+    return res.json({ response: text });
   } catch (err) {
-    console.error("Gemini API Error:", err);
-    res
-      .status(500)
-      .json({
-        response:
-          "Sorry, I'm having trouble connecting to the AI service right now.",
-      });
+    console.error("Gemini API Error:", err?.message || err);
+
+    return res.status(500).json({
+      response:
+        "AI service is temporarily unavailable. Please try again shortly.",
+    });
   }
 });
 
