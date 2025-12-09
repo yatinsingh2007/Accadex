@@ -137,7 +137,7 @@ export default function DashboardPage() {
                     </button>
                 </div>
 
-                <nav className="flex-1 space-y-2">
+                <nav className="flex-1 space-y-2 overflow-y-auto no-scrollbar">
                     <NavItem href="/dashboard" icon={<Home size={20} />} active={false}>Dashboard</NavItem>
                     <NavItem href="/dashboard/schedule" icon={<BarChart2 size={20} />}>Matches</NavItem>
                     <NavItem href="/dashboard/schedule" icon={<CalendarIcon size={20} />}>Schedule</NavItem>

@@ -88,7 +88,7 @@ export default function LandingPage() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
               </span>
-              Next Gen Sports Analytics
+              The Ultimate Sports Ecosystem
             </motion.div>
 
             <motion.h1
@@ -97,8 +97,8 @@ export default function LandingPage() {
               transition={{ duration: 0.5, delay: 0.1 }}
               className="text-5xl md:text-7xl font-bold tracking-tight mb-6 bg-linear-to-b from-white to-gray-500 bg-clip-text text-transparent"
             >
-              Elevate Your Game <br />
-              <span className="text-emerald-500">With AI Insights</span>
+              Track, Connect, & <br />
+              <span className="text-emerald-500">Evolve Your Game</span>
             </motion.h1>
 
             <motion.p
@@ -107,8 +107,8 @@ export default function LandingPage() {
               transition={{ duration: 0.5, delay: 0.2 }}
               className="text-lg md:text-xl text-gray-400 max-w-2xl mb-8"
             >
-              Accadex provides academy players with professional-grade match analysis,
-              performance tracking, and AI-powered coaching feedback.
+              Your all-in-one platform to track match performance, connect with elite coaches & specialists,
+              and get personalized AI guidance.
             </motion.p>
 
             <motion.div
@@ -141,18 +141,18 @@ export default function LandingPage() {
           <div className="grid md:grid-cols-3 gap-8">
             <FeatureCard
               icon={<Activity className="w-6 h-6 text-emerald-400" />}
-              title="Performance Analytics"
-              description="Deep dive into your match stats with visual graphs and trend analysis over time."
+              title="Track Performance"
+              description="Monitor your match history, analyze trends, and visualize your growth as an athlete."
             />
             <FeatureCard
               icon={<Users className="w-6 h-6 text-cyan-400" />}
-              title="Academy Integration"
-              description="Connect with your academy, coaches, and teammates for seamless feedback loops."
+              title="Connect with Pros"
+              description="Get direct access to top-tier coaches, nutritionists, and sports physicians."
             />
             <FeatureCard
               icon={<MessageSquare className="w-6 h-6 text-violet-400" />}
-              title="AI Coach Assistant"
-              description="Upload clips or ask questions to get instant, AI-driven tactical advice."
+              title="AI Guidance"
+              description="Your personal 24/7 assistant for tactical advice and instant feedback."
             />
           </div>
         </div>

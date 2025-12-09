@@ -173,7 +173,7 @@ export default function CommunityPage() {
                     </button>
                 </div>
 
-                <div className="flex-1 overflow-y-auto p-4 space-y-2">
+                <div className="flex-1 overflow-y-auto p-4 space-y-2 no-scrollbar">
                     <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4 px-2">Professionals</h3>
                     {contacts.map(contact => (
                         <button
