@@ -20,7 +20,7 @@ router.post("/", async (req, res) => {
       });
     }
 
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    const model = genAI.getGenerativeModel({ model: "models/gemini-1.5-flash" });
 
     let systemInstruction = "";
 
